@@ -1,0 +1,20 @@
+#Project Settings
+dataset_name: SCDD_ImageNet1k
+num_classes: 1000
+ipc: 50
+data_path: "./datasets/scdd_moco_v3_ipc50"
+save_path: "./models"
+
+#Training Device
+disable_cuda: false
+gpu_index: 0
+
+#Machine Learning Global Settings
+batch_size: 512
+seed: null
+num_workers: 10
+
+#Resnet Learning Settings
+pretrain_resnet: false
+learning_rate: 0.006
+epochs: 20
