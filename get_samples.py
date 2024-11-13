@@ -8,6 +8,17 @@ from sklearn.cluster import DBSCAN
 
 def get_projected_data():
     model = torch.hub.load('facebookresearch/dinov2', 'dinov2_vitb14_reg_lc')
+    DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    # Print the device being used
+    if DEVICE.type == 'cuda':
+        gpu_name = torch.cuda.get_device_name(0)
+        print(f"Training on device: {gpu_name}")  # Print GPU name
+    else:
+        gpu_name = "CPU"
+        print("Training on CPU")
+        
+    model.to(DEVICE)
     model.eval()
 
     transform = transforms.Compose([
@@ -19,13 +30,13 @@ def get_projected_data():
 
     imagenet_path = '/CSCI2952X/datasets/origin_ImageNet-1k/imagenet/Data/train'
     dataset = datasets.ImageFolder(root=imagenet_path, transform=transform)
-    dataloader = DataLoader(dataset, batch_size=10000, shuffle=False, num_workers=4)
+    dataloader = DataLoader(dataset, batch_size=10, shuffle=False, num_workers=4)
 
     feature_matrix = []
 
     with torch.no_grad(): 
         for images, _ in tqdm(dataloader):
-            outputs = model(images)
+            outputs = model(images.cuda())
             # print(outputs)
             feature_matrix.append(outputs.cpu().numpy())
 
